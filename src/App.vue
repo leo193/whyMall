@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    
+    <router-view/>
+    <main-tar-bar/>
   </div>
 </template>
 
 <script>
-
+import MainTarBar from 'components/content/mainTabbar/MainTabBar.vue'
 
 export default {
   name: 'App',
   components: {
-   
+   MainTarBar
   }
 }
 </script>
