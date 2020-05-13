@@ -4,13 +4,12 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <tab-control
-        :titles="['流行','新款','精选']"
-        @tabClick="tabClick"
-        ref="tabControl1"
-        v-show="isTabFixed"
-        class="tab-control"
-        
-      />
+      :titles="['流行','新款','精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      v-show="isTabFixed"
+      class="tab-control"
+    />
     <scroll
       class="content"
       ref="scroll"
@@ -22,11 +21,7 @@
       <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <recommend-view :recommends="recommends" />
       <feature-view />
-      <tab-control
-        :titles="['流行','新款','精选']"
-        @tabClick="tabClick"
-        ref="tabControl2"
-      />
+      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl2" />
       <goods-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
@@ -61,7 +56,8 @@ export default {
       currentType: "pop",
       isShowBackTop: false,
       tabOffsetTop: 0,
-      isTabFixed: false
+      isTabFixed: false,
+      saveY: 0
     };
   },
   components: {
@@ -87,6 +83,16 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  //运用此生命周期函数需要keep-alive包裹
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
+    //强制刷新一次，避免莫名切换，页面自动回滚到顶部
+    this.$refs.scroll.refresh();
+  },
+  //运用此生命周期函数需要keep-alive包裹
+  deactivated() {
+    this.saveY = this.$refs.scroll.getScrollY();
   },
   mounted() {
     //图片加载完毕的事件监听
@@ -175,7 +181,7 @@ export default {
   right: 0;
 }
 
-.tab-control{
+.tab-control {
   position: relative;
   z-index: 9;
 }

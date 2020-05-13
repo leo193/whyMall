@@ -53,6 +53,9 @@ export default {
     //处理图片刷新BUG
     refresh(){
       this.scroll && this.scroll.refresh()
+    },
+    getScrollY(){
+      return this.scroll?this.scroll.y:0
     }
   }
 };
