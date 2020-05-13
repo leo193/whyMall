@@ -1,30 +1,30 @@
 <template>
   <swiper :options="swiperOption">
-      <swiper-slide class="swiper-slide" v-for="(item,index) in banners" :key="index">
-        <img :src="item.image" />
-      </swiper-slide>
-      <!-- 分页器 -->
-      <div class="swiper-pagination" slot="pagination"></div>
-      <!-- 左右箭头 -->
-      <!-- <div class="swiper-button-prev" slot="button-prev"></div>
-      <div class="swiper-button-next" slot="button-next"></div>-->
-    </swiper>
+    <swiper-slide class="swiper-slide" v-for="(item,index) in banners" :key="index">
+      <img :src="item.image" @load="imageLoad" />
+    </swiper-slide>
+    <!-- 分页器 -->
+    <div class="swiper-pagination" slot="pagination"></div>
+    <!-- 左右箭头 -->
+    <!-- <div class="swiper-button-prev" slot="button-prev"></div>
+    <div class="swiper-button-next" slot="button-next"></div>-->
+  </swiper>
 </template>
 
 <script>
-  export default {
-    name: "HomeSwiper",
-    props: {
-      banners: {
-        type: Array,
-        default() {
-          return []
-        }
+export default {
+  name: "HomeSwiper",
+  props: {
+    banners: {
+      type: Array,
+      default() {
+        return [];
       }
-    },
-    data(){
-      return{
-        swiperOption: {
+    }
+  },
+  data() {
+    return {
+      swiperOption: {
         //显示分页
         pagination: {
           el: ".swiper-pagination"
@@ -42,10 +42,19 @@
         },
         //开启循环模式
         loop: true
-      }
+      },
+      isLoad: false
+    };
+  },
+  methods: {
+    imageLoad() {
+      if (!this.isLoad) {
+        this.$emit("swiperImageLoad");
+        this.isLoad = true;
       }
     }
   }
+};
 </script>
 
 <style scoped>
