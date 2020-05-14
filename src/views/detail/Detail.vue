@@ -1,14 +1,16 @@
 <template>
   <div id="detail">
      <detail-nav-bar/>
-     <scroll class="content" ref="scroll">
+     <scroll class="content" ref="scroll" :probe-type="3"
+      :pull-up-load="true"
+      @pullingUp="LoadMore">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
-      <detail-pin :pin="pin"/>
       <detail-goods-info :detail-info="detailInfo" @imgLoad="imgLoad"/>  
       <detail-paramInfo :paramInfo="paramInfo"/>
-
+      <detail-pin :pin="pin"/>
+      <goods-list :goods="showGoods"/>
      </scroll>
   </div>
 </template>
@@ -22,7 +24,10 @@ import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailPin from './childComps/DetailPin'
 
+import GoodsList from "components/content/goods/GoodsList";
 import Scroll from 'components/common/scroll/Scroll'
+
+import { getHomeGoods } from "network/home";
 
 import { getDetail, Goods, Shop, GoodsParam } from 'network/detail'
 export default {
@@ -35,7 +40,11 @@ export default {
       shop:{},
       detailInfo:{},
       paramInfo:{},
-      pin:{}
+      pin:{},
+      hotgoods: {
+        pop: { page: 0, list: [] }
+      },
+      currentType: "pop",
     };
   },
   components: {
@@ -46,13 +55,23 @@ export default {
      DetailGoodsInfo,
      DetailParamInfo,
      DetailPin,
+     GoodsList,
      Scroll
   },
   created() {
      //保存传入的iid
      this.iid = this.$route.params.iid;
      //根据iid请求详情数据
-     this.getDetail(this.iid)
+     this.getDetail(this.iid);
+
+     //求商品数据
+    this.getHomeGoods("pop");
+
+  },
+  computed: {
+    showGoods() {
+      return this.hotgoods[this.currentType].list;
+    }
   },
   methods: {
      getDetail(id){
@@ -81,7 +100,19 @@ export default {
      },
      imgLoad(){
          this.$refs.scroll.refresh();
-     }
+     },
+     getHomeGoods(type) {
+      const page = this.hotgoods[type].page + 1;
+      getHomeGoods(type, page).then(res => {
+        this.hotgoods[type].list.push(...res.data.list);
+        this.hotgoods[type].page += 1;
+        //完成上拉加载更多
+        this.$refs.scroll.finishPullUp();
+      });
+    },
+    LoadMore() {
+      this.getHomeGoods(this.currentType);
+    }
   }
 };
 </script>

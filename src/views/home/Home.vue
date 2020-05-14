@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     showGoods() {
-      return this.goods[this.currentType].list;
+      return this.goods[0].list;
     }
   },
   created() {

@@ -39,6 +39,7 @@ export default {
       //监听上拉事件
       if(this.pullUpLoad){
           this.scroll.on('pullingUp',()=>{
+            //console.log('1111')
           this.$emit('pullingUp')
         })
       }
