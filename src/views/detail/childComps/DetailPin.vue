@@ -1,21 +1,24 @@
 <template>
-  <div>
+  <div v-if="Object.keys(pin).length !== 0">
     <div class="pinTop">
       <span>用户评价</span>
       <span>更多</span>
     </div>
-    <div class="person" v-for="(item,i) in pin.list" :key="i">
+    <div class="person">
       <div class="personTop">
         <span class="face">
-          <img :src="item.user.avatar" alt />
+          <img :src="pin.user.avatar" alt />
         </span>
-        <span class="name">{{item.user.uname}}</span>
+        <span class="name">{{pin.user.uname}}</span>
       </div>
-      <div class="an1">{{item.content}}</div>
+      <div class="an1">{{pin.content}}</div>
       <div class="an2">
-        <span class="time">{{getTime(item.created)}}</span>
-        <span>{{item.style}}</span>
+        <span class="time">{{getTime(pin.created)}}</span>
+        <span>{{pin.style}}</span>
       </div>
+      <!-- <div class="info-imgs">
+        <img :src="item" v-for="(item,index) in pin.images" :key="index" alt="">
+      </div> -->
     </div>
   </div>
 </template>

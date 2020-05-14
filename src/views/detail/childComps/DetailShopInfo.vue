@@ -9,7 +9,7 @@
     <div class="details">
         <div class="details-left">
             <div class="dl">
-                <div>{{shop.sells}}</div>
+                <div>{{shop.sells | sellCountFilter}}</div>
                 <div>总销量</div>
             </div>
             <div class="dr">
@@ -43,6 +43,15 @@ export default {
       default() {
         return {};
       }
+    }
+  },
+  filters:{
+    sellCountFilter(value){
+      let result = value
+      if(value>10000){
+        result = (result / 10000).toFixed(1)+'万'
+      }
+      return result
     }
   }
 };
