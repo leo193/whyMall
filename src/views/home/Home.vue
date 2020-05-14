@@ -40,10 +40,11 @@ import RecommendView from "./childComps/RecommendView";
 import FeatureView from "./childComps/FeatureView";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import { debounce } from "common/utils";
+import { itemImgListenerMiXin } from "common/mixin";
 
 export default {
   name: "Home",
+  mixins:[itemImgListenerMiXin],
   data() {
     return {
       banners: [],
@@ -92,15 +93,14 @@ export default {
   },
   //运用此生命周期函数需要keep-alive包裹
   deactivated() {
+    //保存Y值
     this.saveY = this.$refs.scroll.getScrollY();
+    //取消全局事件监听
+    this.$bus.$off('itemImageLoad',this.itemImgListener)
+
   },
   mounted() {
-    //图片加载完毕的事件监听
-    const refresh = debounce(this.$refs.scroll.refresh, 500);
-    //接收总线发送来的事件，重新刷新bscroll
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+    
   },
   methods: {
     //网络请求

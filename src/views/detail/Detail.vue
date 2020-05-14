@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
     <detail-nav-bar />
-    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true" >
+    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true">
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imgLoad="imgLoad" />
       <detail-paramInfo :paramInfo="paramInfo" />
       <detail-pin :pin="pin" />
-      <goods-list :goods="recommends"/>
+      <goods-list :goods="recommends" />
     </scroll>
   </div>
 </template>
@@ -25,10 +25,17 @@ import DetailPin from "./childComps/DetailPin";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 
-import { debounce } from "common/utils";
-import { getDetail, Goods, Shop, GoodsParam, getRecommend } from "network/detail";
+import { itemImgListenerMiXin } from "common/mixin";
+import {
+  getDetail,
+  Goods,
+  Shop,
+  GoodsParam,
+  getRecommend
+} from "network/detail";
 export default {
   name: "Detail",
+  mixins:[itemImgListenerMiXin],
   data() {
     return {
       iid: null,
@@ -38,7 +45,7 @@ export default {
       detailInfo: {},
       paramInfo: {},
       pin: {},
-      recommends:[]
+      recommends: []
     };
   },
   components: {
@@ -59,20 +66,16 @@ export default {
     this.getDetail(this.iid);
 
     //请求推荐数据
-    getRecommend().then(res=>{
-      this.recommends = res.data.list
-      
-    })
-  },
-  mounted() {
-    //图片加载完毕的事件监听
-    const refresh = debounce(this.$refs.scroll.refresh, 500);
-    //接收总线发送来的事件，重新刷新bscroll
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
+    getRecommend().then(res => {
+      this.recommends = res.data.list;
     });
   },
-  
+  mounted() {
+    
+  },
+  destoryed() {
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
+  },
   methods: {
     getDetail(id) {
       getDetail(id).then(res => {
@@ -100,10 +103,9 @@ export default {
         );
 
         //获取用户评价
-        if(data.rate.cRate !== 0){
-           this.pin = data.rate.list[0];
+        if (data.rate.cRate !== 0) {
+          this.pin = data.rate.list[0];
         }
-        
       });
     },
     imgLoad() {

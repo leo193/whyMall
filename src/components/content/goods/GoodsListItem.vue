@@ -22,13 +22,19 @@ export default {
     },
     computed:{
       showImage(){
-        return this.goodsItem.image || this.show.img
+        return this.goodsItem.image || this.goodsItem.show.img
       }
     },
     methods: {
       //监听图片加载完后通过总线把事件发送出去
       imageLoad(){
         this.$bus.$emit('itemImageLoad')
+        // if(this.$route.path.indexOf("/home")){
+        //   this.$bus.$emit('homeItemImageLoad')
+        // }else if(this.$route.path.indexOf("/detail")){
+        //   this.$bus.$emit('detailItemImageLoad')
+        // }
+        
       },
       itemClick(){
         this.$router.push('/detail/'+this.goodsItem.iid)
