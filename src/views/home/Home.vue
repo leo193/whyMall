@@ -100,7 +100,7 @@ export default {
 
   },
   mounted() {
-    
+    this.tabClick(0)
   },
   methods: {
     //网络请求

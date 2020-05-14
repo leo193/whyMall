@@ -5,7 +5,7 @@
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
-      <detail-goods-info :detail-info="detailInfo" @imgLoad="imgLoad" />
+      <detail-goods-info :detail-info="detailInfo" @imageLoad="imgLoad" />
       <detail-paramInfo :paramInfo="paramInfo" />
       <detail-pin :pin="pin" />
       <goods-list :goods="recommends" />
