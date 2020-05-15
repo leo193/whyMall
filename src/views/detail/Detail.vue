@@ -46,7 +46,8 @@ export default {
       paramInfo: {},
       pin: {},
       recommends: [],
-      themeTopYs: []
+      themeTopYs: [],
+      getThemeTopY:null
     };
   },
   components: {
@@ -65,11 +66,18 @@ export default {
     this.iid = this.$route.params.iid;
     //根据iid请求详情数据
     this.getDetail(this.iid);
-
     //请求推荐数据
     getRecommend().then(res => {
       this.recommends = res.data.list;
     });
+    //设置获取themeTopYs.offsetTop的值
+    this.getThemeTopY =()=>{
+      this.themeTopYs = []
+      this.themeTopYs.push(0)
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.pin.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+    }
   },
   destoryed() {
     this.$bus.$off("itemImageLoad", this.itemImgListener);
@@ -104,22 +112,14 @@ export default {
         if (data.rate.cRate !== 0) {
           this.pin = data.rate.list[0];
         }
-
-        this.$nextTick(()=>{
-            this.themeTopYs = []
-            this.themeTopYs.push(0)
-            this.themeTopYs.push(this.$refs.params.$el.offsetTop)
-            this.themeTopYs.push(this.$refs.pin.$el.offsetTop)
-            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
-            console.log(this.themeTopYs)
-         })
       });
     },
     imgLoad() {
       this.$refs.scroll.refresh();
+      //执行正确获取滚动值的函数，create中设置
+      this.getThemeTopY();
     },
     titleClick(index) {
-      console.log(index)
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
     }
   }
