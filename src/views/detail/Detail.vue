@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar />
-    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true">
+    <detail-nav-bar @titleClick="titleClick" />
+    <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
-      <detail-shop-info :shop="shop" />
+      <detail-shop-info :shop="shop"  />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imgLoad" />
-      <detail-paramInfo :paramInfo="paramInfo" />
-      <detail-pin :pin="pin" />
-      <goods-list :goods="recommends" />
+      <detail-param-info :param-info="paramInfo" ref="params" />
+      <detail-pin :pin="pin" ref="pin" />
+      <goods-list :goods="recommends" ref="recommend" />
     </scroll>
   </div>
 </template>
@@ -35,7 +35,7 @@ import {
 } from "network/detail";
 export default {
   name: "Detail",
-  mixins:[itemImgListenerMiXin],
+  mixins: [itemImgListenerMiXin],
   data() {
     return {
       iid: null,
@@ -45,7 +45,8 @@ export default {
       detailInfo: {},
       paramInfo: {},
       pin: {},
-      recommends: []
+      recommends: [],
+      themeTopYs: []
     };
   },
   components: {
@@ -69,9 +70,6 @@ export default {
     getRecommend().then(res => {
       this.recommends = res.data.list;
     });
-  },
-  mounted() {
-    
   },
   destoryed() {
     this.$bus.$off("itemImageLoad", this.itemImgListener);
@@ -106,10 +104,23 @@ export default {
         if (data.rate.cRate !== 0) {
           this.pin = data.rate.list[0];
         }
+
+        this.$nextTick(()=>{
+            this.themeTopYs = []
+            this.themeTopYs.push(0)
+            this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.pin.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+            console.log(this.themeTopYs)
+         })
       });
     },
     imgLoad() {
       this.$refs.scroll.refresh();
+    },
+    titleClick(index) {
+      console.log(index)
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
     }
   }
 };

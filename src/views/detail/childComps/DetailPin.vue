@@ -1,5 +1,5 @@
 <template>
-  <div v-if="Object.keys(pin).length !== 0">
+  <div v-if="Object.keys(pin).length !== 0" >
     <div class="pinTop">
       <span>用户评价</span>
       <span>更多</span>

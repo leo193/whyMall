@@ -1,9 +1,11 @@
 <template>
   <div v-if="Object.keys(detailInfo).length !== 0">
     <div class="desc">{{detailInfo.desc}}</div>
-    <div class="info-key">{{detailInfo.detailImage[0].key}}</div>
-    <div class="info-list">
-      <img :src="item" alt v-for="(item,index) in detailInfo.detailImage[0].list" :key="index" @load="imgLoad"/>
+    <div v-for="(item,i) in detailInfo.detailImage" :key="i">
+      <div class="info-key">{{item.key}}</div>
+      <div class="info-list">
+        <img :src="item" alt v-for="(item,index) in item.list" :key="index" @load="imgLoad"/>
+      </div>
     </div>
   </div>
 </template>
@@ -51,5 +53,6 @@ export default {
 }
 .info-list img {
   width: 100%;
+
 }
 </style>
